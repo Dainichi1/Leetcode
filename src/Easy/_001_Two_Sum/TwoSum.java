@@ -1,41 +1,49 @@
 package Easy._001_Two_Sum;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * La classe TwoSum fornisce un metodo per risolvere il problema "Two Sum":
- * dato un array di numeri interi e un target, restituisce gli indici di due numeri
- * tali che la loro somma sia uguale al target.
+ * Restituisce gli indici di due numeri presenti nell'array {@code nums} la cui somma è uguale al {@code target}.
+ * <p>
+ * L'algoritmo utilizza una HashMap per memorizzare i numeri già visitati insieme ai rispettivi indici,
+ * in modo da trovare la coppia cercata in tempo lineare O(n).
+ * </p>
  *
- * <p>Assunzioni:
- * - Ogni input ha esattamente una soluzione.
- * - Non si possono usare due volte lo stesso elemento.
- * - L'ordine degli indici nella risposta può essere qualsiasi.</p>
- *
- * Esempio:
+ * <p>Esempio:</p>
+ * <pre>{@code
  * Input: nums = [2, 7, 11, 15], target = 9
- * Output: [0, 1] (perché 2 + 7 = 9)
+ * Output: [0, 1]  // perché nums[0] + nums[1] = 2 + 7 = 9
+ * }</pre>
+ *
+ * <p>Funzionamento step-by-step:</p>
+ * <ul>
+ *   <li>Per ogni elemento nell'array, calcola il "complemento" = target - nums[i]</li>
+ *   <li>Controlla se il complemento è già presente nella mappa</li>
+ *   <li>Se sì, ritorna l'indice del complemento (preso dalla mappa) e l'indice corrente i</li>
+ *   <li>Altrimenti, memorizza nums[i] e il suo indice nella mappa</li>
+ * </ul>
+ *
+ * @param nums   L'array di interi in cui cercare la coppia
+ * @param target Il valore target da raggiungere con la somma di due numeri nell'array
+ * @return Un array di due interi contenente gli indici dei numeri che sommano il target
  */
+
 public class TwoSum {
 
-    /**
-     * Restituisce gli indici dei due elementi nell'array nums la cui somma è uguale a target.
-     *
-     * @param nums   array di interi
-     * @param target valore target da raggiungere con la somma di due numeri
-     * @return array di 2 interi con gli indici degli elementi che sommano il target
-     */
     public int[] twoSum(int[] nums, int target) {
-        // Scorriamo tutti gli elementi dell'array con indice i
+        Map<Integer, Integer> map = new HashMap<>(); // valore → indice
+
         for (int i = 0; i < nums.length; i++) {
-            // Per ogni i, scorriamo gli elementi successivi (j > i)
-            for (int j = i + 1; j < nums.length; j++) {
-                // Verifichiamo se la somma dei due elementi è uguale al target
-                if (nums[i] + nums[j] == target) {
-                    // Se sì, restituiamo immediatamente gli indici i e j
-                    return new int[]{i, j};
-                }
+            int complement = target - nums[i]; // Calcolo il "complemento"
+
+            if (map.containsKey(complement)) {
+                return new int[] { map.get(complement), i }; // Soluzione trovata
             }
+
+            map.put(nums[i], i); // Altrimenti memorizzo il numero attuale e il suo indice
         }
-        // In teoria non dovrebbe mai arrivare qui perché è garantita una soluzione
-        return new int[]{};
+
+        return new int[] {}; // non verrà mai eseguito (problema garantisce una soluzione)
     }
 }
