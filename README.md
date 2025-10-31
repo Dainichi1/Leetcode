@@ -1,7 +1,7 @@
 # 🧠 LeetCode Solutions in Java
 <details open>
 <summary> 🟢 EASY</summary>
-<details open>
+<details>
 <summary>📂 ✅ #1. Two Sum </summary>
 
 **Difficoltà:** Easy  
@@ -85,7 +85,7 @@ nums = [2, 7, 11, 15]
 ```
 
 </details>
-<details open>
+<details>
 <summary> 📂 ✅ #217. Contains Duplicate </summary>
 
 **Difficoltà:** Easy  
@@ -158,5 +158,71 @@ public boolean containsDuplicate(int[] nums) {
     return false;
 }
 ```
+</details>
+<details>
+<summary>📂 ✅ #219. Contains Duplicate II</summary>
+
+**Difficoltà:** Easy  
+**Link al problema:** [LeetCode - Contains Duplicate II](https://leetcode.com/problems/contains-duplicate-ii/)
+
+---
+
+### 🔍 Descrizione
+
+Dato un array di interi `nums` e un intero `k`, restituisci **`true` se esistono due indici `i` e `j`** tali che:
+
+- `nums[i] == nums[j]` (stesso valore) e
+- `|i - j| <= k` (distanza tra indici non superiore a `k`).
+
+---
+
+### 🧠 Intuizione (Sliding Window + HashSet)
+
+Mantieni una **finestra scorrevole** degli ultimi `k` elementi usando un `HashSet`:
+
+- Se il valore corrente è **già nel set**, significa che lo **stesso valore è apparso entro `k` posizioni** → `true`.
+- Altrimenti lo **aggiungi** al set.
+- Se la finestra supera la dimensione `k`, **rimuovi** l’elemento uscito (`nums[i - k]`).
+
+**Complessità:** **Tempo O(n)** — **Spazio O(min(n, k))**.
+
+---
+
+---
+
+### 🔁 Esecuzione passo passo — **Caso TRUE**
+
+**Input:** `nums = [1, 0, 1, 1]`, `k = 1` → **`true`** (gli ultimi due `1` sono a distanza 1 ≤ k)
+
+| Codice Java                           | Esecuzione pratica / Stato finestra (`set`)              |
+| ------------------------------------- | -------------------------------------------------------- |
+| `Set<Integer> set = new HashSet<>();` | `set = { }`                                              |
+| `i = 0` → `nums[0] = 1`               | `contains(1)` ➜ no → `add(1)` → `set={1}`                |
+| `i = 1` → `nums[1] = 0`               | `contains(0)` ➜ no → `add(0)` → `set={1,0}`              |
+| `if (set.size() > k)`                 | `2 > 1` ➜ sì → `remove(nums[1-1]=nums[0]=1)` → `set={0}` |
+| `i = 2` → `nums[2] = 1`               | `contains(1)` ➜ no → `add(1)` → `set={0,1}`              |
+| `if (set.size() > k)`                 | `2 > 1` ➜ sì → `remove(nums[2-1]=nums[1]=0)` → `set={1}` |
+| `i = 3` → `nums[3] = 1`               | `contains(1)` ➜ **sì** → **`return true`**               |
+
+**Spiegazione:** quando `i=3`, `1` è **già** nella finestra degli ultimi `k=1` elementi (indice 2), quindi la distanza è `3 - 2 = 1 ≤ k`.
+
+---
+
+### 🔁 Esecuzione passo passo — **Caso FALSE**
+
+**Input:** `nums = [1, 2, 3, 1, 2, 3]`, `k = 2` → **`false`**  
+(I duplicati ricompaiono sempre a **distanza 3**, che è `> k`.)
+
+| i   | Valore | `contains(nums[i])` | `add(nums[i])` → set | `size > k`? → rimozione           | Finestra effettiva (ultimi ≤ k) |
+| --- | ------ | ------------------- | -------------------- | --------------------------------- | ------------------------------- |
+| 0   | 1      | no                  | `{1}`                | no                                | `[1]`                           |
+| 1   | 2      | no                  | `{1,2}`              | no                                | `[1,2]`                         |
+| 2   | 3      | no                  | `{1,2,3}`            | sì → remove `nums[0]=1` → `{2,3}` | `[2,3]`                         |
+| 3   | 1      | no (`{2,3}`)        | `{2,3,1}`            | sì → remove `nums[1]=2` → `{3,1}` | `[3,1]`                         |
+| 4   | 2      | no (`{3,1}`)        | `{3,1,2}`            | sì → remove `nums[2]=3` → `{1,2}` | `[1,2]`                         |
+| 5   | 3      | no (`{1,2}`)        | `{1,2,3}`            | sì → remove `nums[3]=1` → `{2,3}` | `[2,3]`                         |
+
+**Spiegazione:** per ogni duplicato (1, 2, 3) la ricomparsa è a distanza **3** (0↔3, 1↔4, 2↔5), quindi **mai ≤ k=2**. Nessun `contains(...)` scatta a `true` → si arriva alla fine e si **ritorna `false`**.
+
 </details>
 </details>
