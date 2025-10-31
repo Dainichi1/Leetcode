@@ -1,4 +1,4 @@
-package Easy._219._Contains_Duplicate_II;
+package Easy._219_Contains_Duplicate_II;
 
 import java.util.HashSet;
 import java.util.Set;
