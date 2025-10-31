@@ -1,7 +1,8 @@
 # 🧠 LeetCode Solutions in Java
-
 <details open>
-<summary>📂 ✅ #1. Two Sum — Soluzione con HashMap</summary>
+<summary> 🟢 EASY</summary>
+<details open>
+<summary>📂 ✅ #1. Two Sum </summary>
 
 **Difficoltà:** Easy  
 **Link al problema:** [LeetCode - Two Sum](https://leetcode.com/problems/two-sum/)
@@ -83,4 +84,79 @@ nums = [2, 7, 11, 15]
         [0][1] → 2 + 7 = 9
 ```
 
+</details>
+<details open>
+<summary> 📂 ✅ #217. Contains Duplicate </summary>
+
+**Difficoltà:** Easy  
+**Link al problema:** [LeetCode - Contains Duplicate](https://leetcode.com/problems/contains-duplicate/)
+
+---
+
+### 🔍 Descrizione
+
+Dato un array di interi `nums`, restituisci **`true` se esiste almeno un valore che compare due o più volte** nell’array, altrimenti **`false`**.
+
+---
+
+### 🧠 Soluzione ottimizzata (HashSet)
+
+1. Crea un `HashSet<Integer>` vuoto per tracciare i numeri già visti.
+2. Scorri `nums`:
+    - se `num` è **già nel set**, hai trovato un duplicato → **ritorna `true`**;
+    - altrimenti **aggiungi** `num` al set e continua.
+3. Se il ciclo termina senza trovare duplicati → **ritorna `false`**.
+
+**Complessità:** **Tempo O(n)** (un solo passaggio) — **Spazio O(n)** (nel caso peggiore, tutti distinti).
+
+---
+
+### 🔁 Esecuzione passo passo
+
+Con input:
+
+```java
+nums = [1, 2, 3, 1]
+```
+
+| Codice/Passo                              | Esecuzione pratica                               |
+|------------------------------------------|--------------------------------------------------|
+| `Set<Integer> seen = new HashSet<>();`   | 👉 `seen = { }`                                   |
+| Leggo `1`                                | `seen.contains(1)` → ❌ no → `seen = {1}`         |
+| Leggo `2`                                | `seen.contains(2)` → ❌ no → `seen = {1, 2}`       |
+| Leggo `3`                                | `seen.contains(3)` → ❌ no → `seen = {1, 2, 3}`     |
+| Leggo `1`                                | `seen.contains(1)` → ✅ sì → **ritorna `true`**     |
+
+✅ Risultato finale: `true` perché `1` compare almeno due volte.
+
+---
+
+### 🔎 Spiegazione chiave
+
+- Un `HashSet` contiene **solo elementi unici**: se provi ad inserire un valore **già presente**, lo **rilevi immediatamente** (con `contains`) e puoi **uscire subito**.
+- Questo approccio evita confronti ripetuti tra tutti gli elementi (niente doppi cicli), massimizzando l’efficienza su input grandi.
+
+---
+
+### 🧪 Edge cases utili
+
+- Array vuoto o con 1 elemento → **`false`** (nessun duplicato possibile).
+- Valori negativi o molto grandi → **irrilevanti** per la logica; il set gestisce qualsiasi `int`.
+- Duplicato ad inizio array → **uscita anticipata** (ottimo nella pratica).
+
+---
+
+### 💻 Snippet Java (coincide con la tua soluzione)
+
+```java
+public boolean containsDuplicate(int[] nums) {
+    HashSet<Integer> seenNumbers = new HashSet<>();
+    for (int num : nums) {
+        if (seenNumbers.contains(num)) return true;
+        seenNumbers.add(num);
+    }
+    return false;
+}
+```
+</details>
 </details>

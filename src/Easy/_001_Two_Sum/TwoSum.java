@@ -38,12 +38,13 @@ public class TwoSum {
             int complement = target - nums[i]; // Calcolo il "complemento"
 
             if (map.containsKey(complement)) {
-                return new int[] { map.get(complement), i }; // Soluzione trovata
+                return new int[]{map.get(complement), i}; // Soluzione trovata
             }
 
             map.put(nums[i], i); // Altrimenti memorizzo il numero attuale e il suo indice
         }
 
-        return new int[] {}; // non verrà mai eseguito (problema garantisce una soluzione)
+        return new int[]{}; // non verrà mai eseguito (problema garantisce una soluzione)
+
     }
 }
