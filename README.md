@@ -225,4 +225,115 @@ Mantieni una **finestra scorrevole** degli ultimi `k` elementi usando un `HashSe
 **Spiegazione:** per ogni duplicato (1, 2, 3) la ricomparsa è a distanza **3** (0↔3, 1↔4, 2↔5), quindi **mai ≤ k=2**. Nessun `contains(...)` scatta a `true` → si arriva alla fine e si **ritorna `false`**.
 
 </details>
+<details>
+<summary>📂 ✅ #242. Valid Anagram</summary>
+
+**Difficoltà:** Easy  
+**Link al problema:** [LeetCode - Valid Anagram](https://leetcode.com/problems/valid-anagram/)
+
+---
+
+### 🔍 Descrizione
+
+Date due stringhe `s` e `t`, restituisci `true` **se `t` è un anagramma di `s`**, e `false` altrimenti.
+
+📘 *Un anagramma è una parola o frase ottenuta riordinando le lettere di un’altra parola o frase.*
+
+Esempio:
+- `"anagram"` → `"nagaram"` ✅
+- `"rat"` → `"car"` ❌
+
+---
+
+### 🧠 Soluzione ottimizzata (Array di conteggio)
+
+L’idea: confrontare le **frequenze di ciascuna lettera**.  
+Usiamo un array di 26 interi (per le lettere da `'a'` a `'z'`).
+
+**Complessità:**
+- ⏱ Tempo: **O(n)**
+- 💾 Spazio: **O(1)** (26 posizioni fisse)
+
+---
+
+### 💻 Codice Java con spiegazione riga per riga
+
+| Codice | Spiegazione pratica |
+|--------|----------------------|
+| ```java<br>class Solution {``` | Inizia la classe richiesta da LeetCode. |
+| ```java<br>    public boolean isAnagram(String s, String t) {``` | Metodo pubblico che prende due stringhe `s` e `t` e restituisce `true` se sono anagrammi. |
+| ```java<br>        if (s.length() != t.length()) {``` | Controllo rapido: se le lunghezze differiscono, non possono essere anagrammi. |
+| ```java<br>            return false;``` | Esempio: `"rat"` (3) e `"caro"` (4) → ritorna `false`. |
+| ```java<br>        }``` | Chiude l’`if`. |
+| ```java<br>        int[] charCounts = new int[26];``` | Crea un array di 26 elementi, uno per ogni lettera da `'a'` a `'z'`. Tutti inizializzati a `0`. |
+| ```java<br>        for (int i = 0; i < s.length(); i++) {``` | Ciclo che scorre tutti i caratteri di `s` e `t` contemporaneamente. |
+| ```java<br>            charCounts[s.charAt(i) - 'a']++;``` | Incrementa il contatore della lettera `s[i]`. `'a'` serve per calcolare l’indice (0 per `'a'`, 1 per `'b'`, ecc.). |
+| ```java<br>            charCounts[t.charAt(i) - 'a']--;``` | Decrementa il contatore della lettera `t[i]`. Così ogni coppia di lettere uguali si annulla. |
+| ```java<br>        }``` | Fine del ciclo. Alla fine, se `s` e `t` contengono le stesse lettere, tutti i contatori saranno 0. |
+| ```java<br>        for (int count : charCounts) {``` | Controlla tutti i contatori. |
+| ```java<br>            if (count != 0) {``` | Se trovi un valore diverso da 0, almeno una lettera ha frequenza differente. |
+| ```java<br>                return false;``` | Esempio: `"rat"` vs `"car"` → contatore di `'t'` e `'c'` ≠ 0 → `false`. |
+| ```java<br>            }``` | Chiude l’`if`. |
+| ```java<br>        }``` | Fine del ciclo di verifica. |
+| ```java<br>        return true;``` | Se tutti i contatori sono 0, le due stringhe sono anagrammi → `true`. |
+| ```java<br>    }``` | Fine del metodo. |
+| ```java<br>}``` | Fine della classe. |
+
+---
+
+### 🔁 Esecuzione passo passo — Caso TRUE
+
+**Input:**
+```java
+s = "anagram"
+t = "nagaram"
+```
+
+| Iterazione | s[i] | Effetto (+) | t[i] | Effetto (–) | Stato parziale (lettere principali) |
+|-------------|------|--------------|------|--------------|-------------------------------------|
+| i = 0 | `'a'` → +1 | a:1 | `'n'` → –1 | n:-1 | a:1, n:-1 |
+| i = 1 | `'n'` → +1 | n:0 | `'a'` → –1 | a:0 | tutto 0 finora |
+| i = 2 | `'a'` → +1 | a:1 | `'g'` → –1 | g:-1 | a:1, g:-1 |
+| i = 3 | `'g'` → +1 | g:0 | `'a'` → –1 | a:0 | tutto 0 |
+| i = 4 | `'r'` → +1 | r:1 | `'r'` → –1 | r:0 | tutto 0 |
+| i = 5 | `'a'` → +1 | a:1 | `'a'` → –1 | a:0 | tutto 0 |
+| i = 6 | `'m'` → +1 | m:1 | `'m'` → –1 | m:0 | tutto 0 |
+
+✅ Tutti i contatori = 0 ⇒ ritorna `true`.
+
+---
+
+### 🔁 Esecuzione passo passo — Caso FALSE
+
+**Input:**
+```java
+s = "rat"
+t = "car"
+```
+
+| Iterazione | s[i] | Effetto (+) | t[i] | Effetto (–) | Stato finale |
+|-------------|------|--------------|------|--------------|---------------|
+| i = 0 | `'r'` → +1 | r:1 | `'c'` → –1 | c:-1 | r:1, c:-1 |
+| i = 1 | `'a'` → +1 | a:1 | `'a'` → –1 | a:0 | r:1, c:-1 |
+| i = 2 | `'t'` → +1 | t:1 | `'r'` → –1 | r:0 | t:1, c:-1 |
+
+Alla fine alcuni contatori ≠ 0 (`t:1`, `c:-1`) ⇒ **ritorna `false`**.
+
+---
+
+### 🔎 Spiegazione del `'a'`
+
+Nell’espressione:
+
+```java
+s.charAt(i) - 'a'
+```
+
+- `'a'` è un **carattere** con codice Unicode 97.
+- Ogni lettera minuscola successiva (`'b'`, `'c'`, …) ha codice maggiore.
+- Quindi `'b' - 'a' = 1`, `'c' - 'a' = 2`, …, `'z' - 'a' = 25`.
+
+In questo modo otteniamo un indice compreso tra 0 e 25, perfetto per accedere all’array `charCounts[26]`.
+
+</details>
 </details>
