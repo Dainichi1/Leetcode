@@ -337,3 +337,287 @@ In questo modo otteniamo un indice compreso tra 0 e 25, perfetto per accedere al
 
 </details>
 </details>
+
+<details open>
+<summary>🟡 MEDIUM</summary>
+
+<details>
+<summary>📂 ✅ 49. Group Anagrams</summary>
+
+**Difficoltà:** Medium  
+**Link al problema:** [LeetCode - 49. Group Anagrams](https://leetcode.com/problems/group-anagrams/)
+
+---
+
+### 🔍 Descrizione
+
+Dato un array di stringhe `strs`, dobbiamo **raggruppare insieme** tutte le stringhe che sono **anagrammi** tra loro.
+
+> Due stringhe sono anagrammi se:
+>
+> * hanno gli **stessi caratteri**,
+> * con le **stesse frequenze**,
+> * ma magari in **ordine diverso**.
+
+Esempio:
+
+* Input: `["eat","tea","tan","ate","nat","bat"]`
+  Output possibile (ordine libero):
+
+   * `["bat"]`
+   * `["nat","tan"]`
+   * `["ate","eat","tea"]`
+
+L’ordine dei gruppi e l’ordine interno alle liste **non importa** per LeetCode.
+
+---
+
+### 💡 Idea / Intuizione
+
+Trucco chiave:
+
+1. Per ogni parola, **ordiniamo i caratteri** in ordine alfabetico:
+
+   * `"eat"` → `"aet"`
+   * `"tea"` → `"aet"`
+   * `"tan"` → `"ant"`
+
+2. Usiamo la stringa ordinata come **chiave** di una `HashMap<String, List<String>>`:
+
+   * chiave `"aet"` → lista `["eat","tea","ate"]`
+   * chiave `"ant"` → lista `["tan","nat"]`
+   * chiave `"abt"` → lista `["bat"]`
+
+3. Le **values** della mappa sono esattamente i gruppi di anagrammi da restituire.
+
+Perché funziona?
+Se due parole sono anagrammi, una volta ordinate diventano **identiche**. Quindi avranno la stessa chiave e finiranno nella stessa lista.
+
+---
+
+### 🧩 Algoritmo step-by-step
+
+Dato `strs`:
+
+1. Crea una mappa:
+
+   ```java
+   HashMap<String, List<String>> groups = new HashMap<>();
+   ```
+
+   * chiave = stringa ordinata (es. `"aet"`)
+   * valore = lista di anagrammi (es. `["eat","tea","ate"]`)
+
+2. Per ogni stringa `s` in `strs`:
+
+   1. Converti `s` in array di caratteri.
+   2. Ordina l’array.
+   3. Crea una chiave `key` dalla stringa ordinata.
+   4. Se `key` non esiste ancora nella mappa, crea una nuova lista.
+   5. Aggiungi `s` alla lista corrispondente a `key`.
+
+3. Alla fine, restituisci tutte le liste contenute nella mappa.
+
+---
+
+### ⏱️ Complessità
+
+Sia:
+
+* `n = strs.length` (numero di stringhe)
+* `k = lunghezza media delle stringhe`
+
+Per ogni stringa:
+
+* conversione in array di char → `O(k)`
+* ordinamento dell’array → `O(k log k)`
+* inserimento in mappa → `O(1)` in media
+
+**Tempo totale:** `O(n · k log k)`
+**Spazio:** `O(n · k)` (salviamo tutte le stringhe dentro le liste + chiavi).
+
+---
+
+### 💻 Codice Java
+
+```java
+package Medium._049_Group_Anagrams;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
+public class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        // Mappa: chiave = stringa ordinata, valore = lista di anagrammi
+        HashMap<String, List<String>> groups = new HashMap<>();
+
+        for (String s : strs) {
+            // 1. Convertiamo la stringa in array di char
+            char[] chars = s.toCharArray();
+            // 2. Ordiniamo l'array di char
+            Arrays.sort(chars);
+            // 3. Creiamo la chiave come nuova stringa ordinata
+            String key = new String(chars);
+
+            // 4. Se la chiave non esiste ancora, creiamo una nuova lista
+            if (!groups.containsKey(key)) {
+                groups.put(key, new ArrayList<>());
+            }
+
+            // 5. Aggiungiamo la stringa originale al gruppo corrispondente
+            groups.get(key).add(s);
+        }
+
+        // 6. Restituiamo tutte le liste di anagrammi
+        return new ArrayList<>(groups.values());
+    }
+}
+```
+
+---
+
+## 🔬 Dry-run completo riga per riga (esempio pratico)
+
+Useremo questo input:
+
+```java
+String[] strs = {"eat","tea","tan","ate","nat","bat"};
+```
+
+e vediamo **come ogni riga di codice si applica nella pratica**, con lo stato delle variabili e della mappa.
+
+---
+
+### 1️⃣ Chiamata del metodo e stato iniziale
+
+| Codice                                                     | Cosa succede in pratica                                                     |
+| ---------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `public List<List<String>> groupAnagrams(String[] strs) {` | Entra nel metodo. `strs` contiene: `["eat","tea","tan","ate","nat","bat"]`. |
+
+---
+
+### 2️⃣ Creazione della mappa `groups`
+
+| Codice                                                    | Cosa succede in pratica                                                                                                                       |
+| --------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `HashMap<String, List<String>> groups = new HashMap<>();` | Viene creata una mappa vuota. <br>`groups = { }`. Conterrà chiavi come `"aet"`, `"ant"`, `"abt"` e, come valori, liste di stringhe anagrammi. |
+
+---
+
+### 3️⃣ Il ciclo `for` – panoramica
+
+```java
+for (String s : strs) {
+    ...
+}
+```
+
+`strs = ["eat","tea","tan","ate","nat","bat"]`, quindi il ciclo farà 6 iterazioni con:
+
+1. `s = "eat"`
+2. `s = "tea"`
+3. `s = "tan"`
+4. `s = "ate"`
+5. `s = "nat"`
+6. `s = "bat"`
+
+Ora analizziamo **ogni iterazione** nel dettaglio.
+
+---
+
+### 🔁 Iterazione 1 — `s = "eat"`
+
+| Codice                                  | Cosa succede con `s = "eat"`                                                                              |
+| --------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `char[] chars = s.toCharArray();`       | `"eat"` → `chars = ['e','a','t']`.                                                                        |
+| `Arrays.sort(chars);`                   | Ordiniamo: `['e','a','t']` → `['a','e','t']`.                                                             |
+| `String key = new String(chars);`       | `key = "aet"`.                                                                                            |
+| `if (!groups.containsKey(key)) { ... }` | `"aet"` non esiste ancora → creiamo `groups.put("aet", new ArrayList<>());` → `groups = { "aet" -> [] }`. |
+| `groups.get(key).add(s);`               | Aggiungiamo `"eat"` alla lista: `groups = { "aet" -> ["eat"] }`.                                          |
+
+---
+
+### 🔁 Iterazione 2 — `s = "tea"`
+
+| Codice                     | Cosa succede con `s = "tea"`                                               |
+| -------------------------- | -------------------------------------------------------------------------- |
+| `s = "tea"`                | Secondo giro.                                                              |
+| `s.toCharArray()`          | `"tea"` → `['t','e','a']`.                                                 |
+| `Arrays.sort(chars);`      | `['t','e','a']` → `['a','e','t']`.                                         |
+| `key = new String(chars)`  | `key = "aet"` (stessa chiave di `"eat"`).                                  |
+| `containsKey("aet")`       | Esiste già → **non** creiamo una nuova lista.                              |
+| `groups.get("aet").add(s)` | `["eat"]` → `["eat","tea"]`. Mappa: `groups = { "aet" -> ["eat","tea"] }`. |
+
+---
+
+### 🔁 Iterazione 3 — `s = "tan"`
+
+| Codice                     | Cosa succede con `s = "tan"`                                                                     |
+| -------------------------- | ------------------------------------------------------------------------------------------------ |
+| `s = "tan"`                | Terzo giro.                                                                                      |
+| `s.toCharArray()`          | `"tan"` → `['t','a','n']`.                                                                       |
+| `Arrays.sort(chars);`      | `['t','a','n']` → `['a','n','t']`.                                                               |
+| `key = new String(chars)`  | `key = "ant"`.                                                                                   |
+| `containsKey("ant")`       | Non esiste → creiamo `groups.put("ant", new ArrayList<>());`.                                    |
+| `groups.get("ant").add(s)` | Lista `"ant"` diventa `["tan"]`. Mappa: `groups = { "aet" -> ["eat","tea"], "ant" -> ["tan"] }`. |
+
+---
+
+### 🔁 Iterazione 4 — `s = "ate"`
+
+| Codice                     | Cosa succede con `s = "ate"`                            |
+| -------------------------- | ------------------------------------------------------- |
+| `s = "ate"`                | Quarto giro.                                            |
+| `s.toCharArray()`          | `"ate"` → `['a','t','e']`.                              |
+| `Arrays.sort(chars);`      | `['a','t','e']` → `['a','e','t']`.                      |
+| `key = new String(chars)`  | `key = "aet"`.                                          |
+| `containsKey("aet")`       | Esiste già → non creiamo nuova lista.                   |
+| `groups.get("aet").add(s)` | Lista `"aet"`: `["eat","tea"]` → `["eat","tea","ate"]`. |
+
+---
+
+### 🔁 Iterazione 5 — `s = "nat"`
+
+| Codice                     | Cosa succede con `s = "nat"`                |
+| -------------------------- | ------------------------------------------- |
+| `s = "nat"`                | Quinto giro.                                |
+| `s.toCharArray()`          | `"nat"` → `['n','a','t']`.                  |
+| `Arrays.sort(chars);`      | `['n','a','t']` → `['a','n','t']`.          |
+| `key = new String(chars)`  | `key = "ant"`.                              |
+| `containsKey("ant")`       | Esiste già → usiamo la lista esistente.     |
+| `groups.get("ant").add(s)` | Lista `"ant"`: `["tan"]` → `["tan","nat"]`. |
+
+---
+
+### 🔁 Iterazione 6 — `s = "bat"`
+
+| Codice                     | Cosa succede con `s = "bat"`                                                                                           |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `s = "bat"`                | Sesto (ultimo) giro.                                                                                                   |
+| `s.toCharArray()`          | `"bat"` → `['b','a','t']`.                                                                                             |
+| `Arrays.sort(chars);`      | `['b','a','t']` → `['a','b','t']`.                                                                                     |
+| `key = new String(chars)`  | `key = "abt"`.                                                                                                         |
+| `containsKey("abt")`       | Non esiste → creiamo nuova lista: `groups.put("abt", new ArrayList<>());`.                                             |
+| `groups.get("abt").add(s)` | Lista `"abt"` diventa `["bat"]`. Mappa finale: `{ "aet"->["eat","tea","ate"], "ant"->["tan","nat"], "abt"->["bat"] }`. |
+
+---
+
+### 🔚 Return finale
+
+```java
+return new ArrayList<>(groups.values());
+```
+
+Questo restituisce qualcosa del tipo:
+
+```java
+[
+  ["eat","tea","ate"],
+  ["tan","nat"],
+  ["bat"]
+]
+```
+</details>
+</details>
