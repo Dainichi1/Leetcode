@@ -159,6 +159,98 @@ public boolean containsDuplicate(int[] nums) {
 }
 ```
 </details>
+<details> <summary>📂 ✅ #121. Best Time to Buy and Sell Stock</summary>
+
+Difficoltà: Easy
+Link al problema: LeetCode - Best Time to Buy and Sell Stock
+
+🔍 Descrizione
+
+Ti viene dato un array prices dove prices[i] è il prezzo di un’azione nel giorno i.
+
+Vuoi massimizzare il profitto scegliendo:
+
+un solo giorno per comprare una azione
+
+un giorno diverso nel futuro per vendere quell’azione
+
+Restituisci il massimo profitto ottenibile.
+Se non puoi ottenere profitto, restituisci 0.
+
+🧠 Soluzione ottimizzata (One Pass: minimo + profitto)
+
+Idea chiave:
+
+Teniamo il prezzo minimo visto finora (minPrice) → miglior giorno per comprare fino a quel momento.
+
+Per ogni giorno calcoliamo il profitto se vendiamo oggi: price - minPrice.
+
+Aggiorniamo il profitto massimo (maxProfit) se troviamo un profitto migliore.
+
+Un solo ciclo → Tempo O(n), Spazio O(1).
+
+🔁 Esecuzione passo passo (esempio semplice)
+
+Input:
+
+prices = [5, 2, 4]
+
+Codice Java / Stato	Esecuzione pratica (come nella realtà)
+minPrice = ∞, maxProfit = 0	Inizio: non ho ancora visto prezzi, profitto migliore = 0
+Giorno 1: price = 5	5 < ∞ → aggiorno minimo: compro “idealmente” a 5
+Stato: minPrice = 5, maxProfit = 0	Miglior prezzo visto finora: 5
+Giorno 2: price = 2	2 < 5 → nuovo minimo: compro meglio a 2
+Stato: minPrice = 2, maxProfit = 0	Miglior prezzo visto finora: 2
+Giorno 3: price = 4	4 non è minimo → provo a vendere oggi: profitto = 4 - 2 = 2
+Stato: maxProfit = 2	Miglior affare trovato: compro a 2 e vendo a 4 → profitto 2
+
+✅ Risultato finale: 2
+
+💻 Codice Java (coincide con la soluzione ottimizzata)
+class Solution {
+public int maxProfit(int[] prices) {
+int minPrice = Integer.MAX_VALUE;
+int maxProfit = 0;
+
+        for (int price : prices) {
+            if (price < minPrice) {
+                minPrice = price;
+            } else {
+                int profit = price - minPrice;
+                if (profit > maxProfit) {
+                    maxProfit = profit;
+                }
+            }
+        }
+
+        return maxProfit;
+    }
+}
+
+🔎 Spiegazione chiave (super chiara)
+
+minPrice = “il prezzo migliore a cui avrei potuto comprare fino a ieri/oggi”
+
+quando il prezzo scende, aggiorno minPrice
+
+quando il prezzo sale rispetto a minPrice, calcolo un possibile guadagno
+
+tengo sempre il migliore in maxProfit
+
+📦 Visuale:
+
+minPrice  → miglior prezzo di acquisto finora
+maxProfit → miglior guadagno possibile finora
+
+🧪 Edge cases utili
+
+prices = [7,6,4,3,1] → sempre in discesa → maxProfit resta 0
+
+prices = [1] → non puoi vendere dopo → 0
+
+prices = [2,1,2] → compro a 1, vendo a 2 → 1
+
+</details>
 <details>
 <summary>📂 ✅ #219. Contains Duplicate II</summary>
 
