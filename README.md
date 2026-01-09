@@ -251,6 +251,172 @@ prices = [1] → non puoi vendere dopo → 0
 prices = [2,1,2] → compro a 1, vendo a 2 → 1
 
 </details>
+<details> <summary>📂 ✅ #141. Linked List Cycle</summary>
+
+Difficoltà: Easy
+Link al problema: LeetCode - Linked List Cycle
+
+🔍 Descrizione
+
+Data la testa di una linked list head, restituisci true se la lista contiene un ciclo, altrimenti false.
+
+📌 Un ciclo esiste se, seguendo ripetutamente i puntatori next, torni su un nodo già visitato.
+
+pos è usato solo nella descrizione per indicare a quale indice punta la coda, ma non viene passato alla funzione.
+
+🧠 Soluzione ottimizzata (Floyd: Slow & Fast pointers)
+
+Usiamo due puntatori:
+
+slow avanza di 1 nodo
+
+fast avanza di 2 nodi
+
+Se non c’è ciclo, fast prima o poi arriva a null (fine lista).
+
+Se c’è ciclo, fast prima o poi “raggiunge” slow e diventano lo stesso nodo.
+
+Complessità: Tempo O(n), Spazio O(1).
+
+💻 Codice Java (coincide con la soluzione ottimizzata)
+public class Solution {
+public boolean hasCycle(ListNode head) {
+
+        // 1) Caso base: lista vuota
+        if (head == null) return false;
+
+        // 2) Due puntatori
+        ListNode slow = head;
+        ListNode fast = head;
+
+        // 3) Finché fast può fare due passi senza uscire dalla lista
+        while (fast != null && fast.next != null) {
+
+            // 4) slow fa 1 passo
+            slow = slow.next;
+
+            // 5) fast fa 2 passi
+            fast = fast.next.next;
+
+            // 6) Se si incontrano -> ciclo
+            if (slow == fast) return true;
+        }
+
+        // 7) Se fast arriva a null -> nessun ciclo
+        return false;
+    }
+}
+
+🧱 Cos’è ListNode (il “nodo” della lista)
+class ListNode {
+int val;        // valore del nodo
+ListNode next;  // riferimento al prossimo nodo
+
+    ListNode(int val) {
+        this.val = val;
+        this.next = null;
+    }
+}
+
+
+📌 Semantica di ListNode next;
+
+next è un riferimento a un altro nodo (stesso tipo ListNode).
+
+Serve perché ogni nodo deve “sapere” chi è il prossimo nella catena.
+
+next = null significa fine lista.
+
+🔁 Esecuzione passo passo (con riferimento fisso)
+
+Input:
+
+head = [3,2,0,-4]
+pos = 1
+
+
+Significa: l’ultimo nodo -4 punta al nodo di indice 1 (valore 2).
+
+📦 Visuale:
+
+Indice:   0      1      2       3
+Valore:  [3] -> [2] -> [0] ->  [-4]
+^               |
+|_______________|
+
+🔁 Dry-run “Codice a sinistra | Realtà a destra” (stile Two Sum)
+
+✅ Riferimento costante: head = [3,2,0,-4] , pos = 1
+
+Codice Java	Esecuzione pratica (come nella realtà)
+if (head == null) return false;	head non è null (punta a 3) → continuo
+slow = head; fast = head;	slow = 3, fast = 3
+while (fast != null && fast.next != null)	fast=3 ok e fast.next=2 ok → entro
+✅ Iterazione 1
+
+✅ Riferimento: head = [3,2,0,-4] , pos = 1
+
+Codice Java	Esecuzione pratica
+slow = slow.next;	slow: 3 → 2
+fast = fast.next.next;	fast: 3 → 2 → 0
+if (slow == fast)	2 == 0 → ❌ no
+
+Stato: slow = 2, fast = 0
+
+✅ Iterazione 2
+
+✅ Riferimento: head = [3,2,0,-4] , pos = 1
+
+Codice Java	Esecuzione pratica
+slow = slow.next;	slow: 2 → 0
+fast = fast.next.next;	fast: 0 → -4 → 2 (perché -4 punta a 2)
+if (slow == fast)	0 == 2 → ❌ no
+
+Stato: slow = 0, fast = 2
+
+✅ Iterazione 3
+
+✅ Riferimento: head = [3,2,0,-4] , pos = 1
+
+Codice Java	Esecuzione pratica
+slow = slow.next;	slow: 0 → -4
+fast = fast.next.next;	fast: 2 → 0 → -4
+if (slow == fast)	-4 == -4 → ✅ sì → return true
+
+✅ Risultato finale: true (ciclo presente)
+
+🔎 Spiegazione chiave del while
+while (fast != null && fast.next != null)
+
+
+Serve perché fast fa due passi con:
+
+fast = fast.next.next;
+
+
+Quindi devono esistere:
+
+fast (non null)
+
+fast.next (non null)
+
+Altrimenti rischi un NullPointerException e/o significa che la lista è finita → niente ciclo.
+
+🧪 Edge cases utili
+
+head = [] → false
+
+head = [1] pos = -1 → false
+
+head = [1] pos = 0 → true (il nodo punta a sé stesso)
+
+⏱️ Complessità
+
+Tempo: O(n)
+
+Spazio: O(1)
+
+</details>
 <details>
 <summary>📂 ✅ #219. Contains Duplicate II</summary>
 
