@@ -85,80 +85,6 @@ nums = [2, 7, 11, 15]
 ```
 
 </details>
-<details>
-<summary> 📂 ✅ #217. Contains Duplicate </summary>
-
-**Difficoltà:** Easy  
-**Link al problema:** [LeetCode - Contains Duplicate](https://leetcode.com/problems/contains-duplicate/)
-
----
-
-### 🔍 Descrizione
-
-Dato un array di interi `nums`, restituisci **`true` se esiste almeno un valore che compare due o più volte** nell’array, altrimenti **`false`**.
-
----
-
-### 🧠 Soluzione ottimizzata (HashSet)
-
-1. Crea un `HashSet<Integer>` vuoto per tracciare i numeri già visti.
-2. Scorri `nums`:
-    - se `num` è **già nel set**, hai trovato un duplicato → **ritorna `true`**;
-    - altrimenti **aggiungi** `num` al set e continua.
-3. Se il ciclo termina senza trovare duplicati → **ritorna `false`**.
-
-**Complessità:** **Tempo O(n)** (un solo passaggio) — **Spazio O(n)** (nel caso peggiore, tutti distinti).
-
----
-
-### 🔁 Esecuzione passo passo
-
-Con input:
-
-```java
-nums = [1, 2, 3, 1]
-```
-
-| Codice/Passo                              | Esecuzione pratica                               |
-|------------------------------------------|--------------------------------------------------|
-| `Set<Integer> seen = new HashSet<>();`   | 👉 `seen = { }`                                   |
-| Leggo `1`                                | `seen.contains(1)` → ❌ no → `seen = {1}`         |
-| Leggo `2`                                | `seen.contains(2)` → ❌ no → `seen = {1, 2}`       |
-| Leggo `3`                                | `seen.contains(3)` → ❌ no → `seen = {1, 2, 3}`     |
-| Leggo `1`                                | `seen.contains(1)` → ✅ sì → **ritorna `true`**     |
-
-✅ Risultato finale: `true` perché `1` compare almeno due volte.
-
----
-
-### 🔎 Spiegazione chiave
-
-- Un `HashSet` contiene **solo elementi unici**: se provi ad inserire un valore **già presente**, lo **rilevi immediatamente** (con `contains`) e puoi **uscire subito**.
-- Questo approccio evita confronti ripetuti tra tutti gli elementi (niente doppi cicli), massimizzando l’efficienza su input grandi.
-
----
-
-### 🧪 Edge cases utili
-
-- Array vuoto o con 1 elemento → **`false`** (nessun duplicato possibile).
-- Valori negativi o molto grandi → **irrilevanti** per la logica; il set gestisce qualsiasi `int`.
-- Duplicato ad inizio array → **uscita anticipata** (ottimo nella pratica).
-
----
-
-### 💻 Snippet Java (coincide con la tua soluzione)
-
-```java
-public boolean containsDuplicate(int[] nums) {
-    HashSet<Integer> seenNumbers = new HashSet<>();
-    for (int num : nums) {
-        if (seenNumbers.contains(num)) return true;
-        seenNumbers.add(num);
-    }
-    return false;
-}
-```
-</details>
 <details> <summary>📂 ✅ #121. Best Time to Buy and Sell Stock</summary>
 
 Difficoltà: Easy
@@ -416,6 +342,200 @@ Tempo: O(n)
 
 Spazio: O(1)
 
+</details>
+<details>
+  <summary>📂 ✅ #191. Number of 1 Bits</summary>
+
+**Difficoltà:** Easy  
+**Link al problema:** [LeetCode - Number of 1 Bits](https://leetcode.com/problems/number-of-1-bits/)
+
+  ---
+
+### 🔍 Descrizione
+
+Dato un intero positivo `n`, restituisci **quanti bit sono impostati a 1** nella sua rappresentazione binaria  
+(chiamato anche **Hamming weight**).
+
+Esempi:
+- `n = 11` → binario `1011` → output `3`
+- `n = 128` → binario `10000000` → output `1`
+
+  ---
+
+### 🧠 Soluzione ottimizzata (Bit Trick: `n & (n - 1)`)
+
+Idea chiave:
+
+✅ L’operazione:
+
+`n = n & (n - 1)`
+
+**spegne (toglie) sempre il bit a 1 più a destra**.
+
+Quindi:
+1. Finché `n` non diventa 0
+2. Spegni un `1` per volta
+3. Incrementi `count`
+4. Alla fine `count` è il numero totale di `1`
+
+**Complessità:**
+- Tempo: **O(k)** dove `k` = numero di bit a 1
+- Spazio: **O(1)**
+
+  ---
+
+### 💻 Codice Java
+
+  ```java
+  class Solution {
+    /**
+     * Restituisce il numero di bit a 1 nella rappresentazione binaria di n.
+     * Trucco: n & (n - 1) elimina (spegne) il bit a 1 più a destra.
+     */
+    public int hammingWeight(int n) {
+        int count = 0;
+
+        while (n != 0) {
+            n = n & (n - 1); // spegne un bit a 1
+            count++;         // conto quanti 1 ho spento
+        }
+
+        return count;
+    }
+}
+🔁 Esecuzione passo passo (con n = 11)
+Prima convertiamo 11 in binario:
+
+        11 = 8 + 2 + 1
+
+        8	4	2	1
+        1	0	1	1
+
+        👉 quindi 11 = 1011
+
+        🧪 Dry-run "Codice a sinistra | Realtà a destra"
+        ✅ Riferimento costante: n = 11 (1011)
+
+Codice Java	Esecuzione pratica (come nella realtà)
+int count = 0;	Inizio: count = 0
+        while (n != 0)	n = 11 → non è 0 → entro nel ciclo
+
+✅ Iterazione 1
+Codice Java	Esecuzione pratica
+n = n & (n - 1);	n = 1011 (11)
+n - 1 = 1010 (10)
+AND → 1010 (10) → spento l’ultimo 1
+count++;	count = 1
+Stato	n = 10 (1010), count = 1
+
+        ✅ Iterazione 2
+Codice Java	Esecuzione pratica
+n = n & (n - 1);	n = 1010 (10)
+n - 1 = 1001 (9)
+AND → 1000 (8) → spento un altro 1
+count++;	count = 2
+Stato	n = 8 (1000), count = 2
+
+        ✅ Iterazione 3
+Codice Java	Esecuzione pratica
+n = n & (n - 1);	n = 1000 (8)
+n - 1 = 0111 (7)
+AND → 0000 (0) → spento l’ultimo 1
+count++;	count = 3
+Stato	n = 0 (0000), count = 3
+
+        ✅ Fine ciclo e return
+Codice Java	Esecuzione pratica
+while (n != 0)	n = 0 → esco dal ciclo
+return count;	ritorna 3 ✅
+
+        🔎 Spiegazione chiave
+Ogni iterazione elimina esattamente un bit a 1 (quello più a destra).
+Quindi il numero di iterazioni è uguale al numero totale di 1.
+
+        📦 Visuale:
+
+yaml
+Copia codice
+1011  (11)
+        → 1010  (10)
+        → 1000  (8)
+        → 0000  (0)
+count = 3
+</details> 
+<details>
+<summary> 📂 ✅ #217. Contains Duplicate </summary>
+
+**Difficoltà:** Easy  
+**Link al problema:** [LeetCode - Contains Duplicate](https://leetcode.com/problems/contains-duplicate/)
+
+---
+
+### 🔍 Descrizione
+
+Dato un array di interi `nums`, restituisci **`true` se esiste almeno un valore che compare due o più volte** nell’array, altrimenti **`false`**.
+
+---
+
+### 🧠 Soluzione ottimizzata (HashSet)
+
+1. Crea un `HashSet<Integer>` vuoto per tracciare i numeri già visti.
+2. Scorri `nums`:
+    - se `num` è **già nel set**, hai trovato un duplicato → **ritorna `true`**;
+    - altrimenti **aggiungi** `num` al set e continua.
+3. Se il ciclo termina senza trovare duplicati → **ritorna `false`**.
+
+**Complessità:** **Tempo O(n)** (un solo passaggio) — **Spazio O(n)** (nel caso peggiore, tutti distinti).
+
+---
+
+### 🔁 Esecuzione passo passo
+
+Con input:
+
+```java
+nums = [1, 2, 3, 1]
+```
+
+| Codice/Passo                              | Esecuzione pratica                               |
+|------------------------------------------|--------------------------------------------------|
+| `Set<Integer> seen = new HashSet<>();`   | 👉 `seen = { }`                                   |
+| Leggo `1`                                | `seen.contains(1)` → ❌ no → `seen = {1}`         |
+| Leggo `2`                                | `seen.contains(2)` → ❌ no → `seen = {1, 2}`       |
+| Leggo `3`                                | `seen.contains(3)` → ❌ no → `seen = {1, 2, 3}`     |
+| Leggo `1`                                | `seen.contains(1)` → ✅ sì → **ritorna `true`**     |
+
+✅ Risultato finale: `true` perché `1` compare almeno due volte.
+
+---
+
+### 🔎 Spiegazione chiave
+
+- Un `HashSet` contiene **solo elementi unici**: se provi ad inserire un valore **già presente**, lo **rilevi immediatamente** (con `contains`) e puoi **uscire subito**.
+- Questo approccio evita confronti ripetuti tra tutti gli elementi (niente doppi cicli), massimizzando l’efficienza su input grandi.
+
+---
+
+### 🧪 Edge cases utili
+
+- Array vuoto o con 1 elemento → **`false`** (nessun duplicato possibile).
+- Valori negativi o molto grandi → **irrilevanti** per la logica; il set gestisce qualsiasi `int`.
+- Duplicato ad inizio array → **uscita anticipata** (ottimo nella pratica).
+
+---
+
+### 💻 Snippet Java (coincide con la tua soluzione)
+
+```java
+public boolean containsDuplicate(int[] nums) {
+    HashSet<Integer> seenNumbers = new HashSet<>();
+    for (int num : nums) {
+        if (seenNumbers.contains(num)) return true;
+        seenNumbers.add(num);
+    }
+    return false;
+}
+```
 </details>
 <details>
 <summary>📂 ✅ #219. Contains Duplicate II</summary>

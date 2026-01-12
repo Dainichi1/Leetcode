@@ -1,4 +1,4 @@
-package Easy._002_Palindrome_Number;
+package Easy._009_Palindrome_Number;
 
 /**
  * Soluzione per il problema LeetCode 9: Palindrome Number.

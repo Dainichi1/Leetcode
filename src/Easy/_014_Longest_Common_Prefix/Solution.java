@@ -1,4 +1,4 @@
-package Easy._004_Longest_Common_Prefix;
+package Easy._014_Longest_Common_Prefix;
 
 /**
  * Classe che implementa la soluzione al problema "Longest Common Prefix" (LeetCode #14).
