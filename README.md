@@ -714,6 +714,130 @@ s.charAt(i) - 'a'
 In questo modo otteniamo un indice compreso tra 0 e 25, perfetto per accedere all’array `charCounts[26]`.
 
 </details>
+<details>
+<summary>📂 ✅ #268. Missing Number</summary>
+
+**Difficoltà:** Easy  
+**Link al problema:** [LeetCode - Missing Number](https://leetcode.com/problems/missing-number/)
+
+---
+
+### 🔍 Descrizione
+
+Ti viene dato un array `nums` contenente **n numeri distinti** nell’intervallo **[0, n]**.
+
+⚠️ Nell’intervallo completo **manca esattamente un numero**.
+
+✅ Obiettivo: **restituire il numero mancante**.
+
+---
+
+### 🧠 Soluzione ottimizzata (XOR)
+
+Idea chiave: usare l’operatore **XOR (`^`)** per “cancellare” i numeri uguali.
+
+Proprietà fondamentali:
+- `x ^ x = 0` → due numeri uguali si annullano
+- `x ^ 0 = x` → XOR con 0 non cambia niente
+- XOR è **commutativo** e **associativo** → l’ordine non conta
+
+Strategia:
+1. Facciamo XOR di **tutti i numeri attesi** da `0` a `n`
+2. Facciamo XOR di **tutti i numeri presenti** in `nums`
+3. Tutti i numeri presenti si annullano (`x ^ x = 0`)
+4. Rimane solo il numero mancante
+
+Complessità: **Tempo O(n)**, **Spazio O(1)**
+
+---
+
+### 🔁 Esecuzione passo passo (con riferimento fisso)
+
+Input:
+
+
+nums = [0, 1, 2, 4, 5]
+Qui:
+
+n = nums.length = 5
+
+numeri attesi: [0, 1, 2, 3, 4, 5]
+
+manca: 3
+
+✅ Ciclo 1: XOR di tutti i numeri attesi (0..n)
+Riferimento costante: nums = [0, 1, 2, 4, 5]
+
+Passo	Operazione	Stato xor
+start	xor = 0	0
+i=0	xor ^= 0	0
+i=1	xor ^= 1	1
+i=2	xor ^= 2	3
+i=3	xor ^= 3	0
+i=4	xor ^= 4	4
+i=5	xor ^= 5	1
+
+✅ Fine ciclo 1 → xor = 1
+📌 Significato: xor ora contiene il risultato di (0 ^ 1 ^ 2 ^ 3 ^ 4 ^ 5)
+
+✅ Ciclo 2: XOR di tutti i numeri presenti nell’array
+Riferimento costante: nums = [0, 1, 2, 4, 5]
+
+value (da nums)	Operazione	Stato xor
+0	xor ^= 0	1
+1	xor ^= 1	0
+2	xor ^= 2	2
+4	xor ^= 4	6
+5	xor ^= 5	3
+
+✅ Fine ciclo 2 → xor = 3
+
+📌 Perché funziona?
+
+i numeri presenti (0,1,2,4,5) vengono XORati due volte (attesi + reali) → si annullano
+
+il numero mancante (3) compare solo una volta → resta
+
+✅ Risultato finale: 3
+
+💻 Codice Java (soluzione ottimizzata)
+java
+Copia codice
+class Solution {
+    public int missingNumber(int[] nums) {
+        int n = nums.length;
+        int xor = 0;
+
+        // 1) XOR di tutti i numeri attesi da 0 a n
+        for (int i = 0; i <= n; i++) {
+            xor ^= i;
+        }
+
+        // 2) XOR di tutti i numeri presenti nell'array
+        for (int value : nums) {
+            xor ^= value;
+        }
+
+        // 3) Quello che resta è il numero mancante
+        return xor;
+    }
+}
+🔎 Spiegazione chiave
+XOR “cancella” i doppioni:
+
+Tutti i numeri presenti nell’array compaiono due volte nello XOR totale → spariscono (x ^ x = 0)
+
+Il numero mancante compare una sola volta → resta come risultato
+
+📦 Visuale:
+
+markdown
+Copia codice
+Attesi:  0  1  2  3  4  5
+Reali :  0  1  2     4  5
+-------------------------
+Manca :        3
+</details>
 </details>
 
 <details open>
