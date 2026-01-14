@@ -85,6 +85,127 @@ nums = [2, 7, 11, 15]
 ```
 
 </details>
+<details> <summary>📂 ✅ #70. Climbing Stairs</summary>
+
+Difficoltà: Easy
+Link al problema: LeetCode - Climbing Stairs
+
+🔍 Descrizione
+
+Sei su una scala e per arrivare in cima devi salire n gradini.
+
+Ogni volta puoi salire:
+
+1 gradino oppure
+
+2 gradini
+
+Restituisci in quanti modi distinti puoi arrivare in cima.
+
+Esempi:
+
+n = 2 → 2 modi: 1+1, 2
+
+n = 3 → 3 modi: 1+1+1, 1+2, 2+1
+
+🧠 Idea chiave
+
+Per arrivare al gradino i:
+
+arrivi da i-1 con un passo da 1
+
+arrivi da i-2 con un passo da 2
+
+Quindi:
+
+ways(i) = ways(i-1) + ways(i-2)
+
+
+È come Fibonacci, ma con basi:
+
+ways(1) = 1
+
+ways(2) = 2
+
+💻 Soluzione ottimizzata (O(1) memoria)
+
+Teniamo solo gli ultimi due risultati (ways(i-2) e ways(i-1)), perché per calcolare ways(i) ci bastano quelli.
+
+class Solution {
+public int climbStairs(int n) {
+if (n <= 2) return n;
+
+        int ways1 = 1; // ways(1)
+        int ways2 = 2; // ways(2)
+
+        for (int i = 3; i <= n; i++) {
+            int current = ways2 + ways1; // ways(i)
+            ways1 = ways2;               // shift: ways(i-2) diventa ways(i-1)
+            ways2 = current;             // shift: ways(i-1) diventa ways(i)
+        }
+
+        return ways2; // ways(n)
+    }
+}
+
+
+✅ Complessità:
+
+Tempo: O(n)
+
+Spazio: O(1)
+
+🔁 Esecuzione passo passo (codice a sinistra | realtà a destra)
+
+Esempio:
+
+n = 5
+
+
+Casi base:
+
+ways(1) = 1
+
+ways(2) = 2
+
+Stato iniziale:
+
+ways1 = 1 (ways(1))
+
+ways2 = 2 (ways(2))
+
+Codice Java	Esecuzione pratica (n = 5)
+ways1 = 1; ways2 = 2;	Inizio: ways1=1 (ways(1)), ways2=2 (ways(2))
+i = 3	Voglio calcolare ways(3)
+current = ways2 + ways1;	current = 2 + 1 = 3 → ways(3)=3
+ways1 = ways2;	ways1 = 2 → ora ways1 diventa ways(2)
+ways2 = current;	ways2 = 3 → ora ways2 diventa ways(3)
+i = 4	Voglio calcolare ways(4)
+current = ways2 + ways1;	current = 3 + 2 = 5 → ways(4)=5
+ways1 = ways2;	ways1 = 3 → ora ways1 diventa ways(3)
+ways2 = current;	ways2 = 5 → ora ways2 diventa ways(4)
+i = 5	Voglio calcolare ways(5)
+current = ways2 + ways1;	current = 5 + 3 = 8 → ways(5)=8
+ways1 = ways2; ways2 = current;	Fine: ways2 = 8
+return ways2;	✅ ritorna 8
+📦 Visuale rapida (come cresce)
+ways(1)=1
+ways(2)=2
+ways(3)=3
+ways(4)=5
+ways(5)=8
+
+🔎 Spiegazione chiave del “shift”
+
+Dopo aver calcolato current = ways(i), facciamo scorrere i valori:
+
+ways1 = ways2;   // ways(i-2) diventa ways(i-1)
+ways2 = current; // ways(i-1) diventa ways(i)
+
+
+Così nel giro successivo abbiamo di nuovo “gli ultimi due” pronti.
+
+</details>
 <details> <summary>📂 ✅ #121. Best Time to Buy and Sell Stock</summary>
 
 Difficoltà: Easy
