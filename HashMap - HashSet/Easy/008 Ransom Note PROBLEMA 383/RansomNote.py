@@ -1,7 +1,3 @@
-from operator import index
-from traceback import format_tb
-
-
 class Solution:
     def canConstruct(self, ransomNote: str, magazine: str) -> bool:
         if len(ransomNote) > len(magazine):
